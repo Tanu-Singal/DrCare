@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+const API = import.meta.env.VITE_API;
 const SymptomChecker = () => {
   const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState("");

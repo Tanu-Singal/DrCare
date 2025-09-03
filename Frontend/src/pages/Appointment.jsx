@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CalendarDays, Phone, MapPin, User, Stethoscope } from "lucide-react";
-
+const API = import.meta.env.VITE_API;
 const Appointment = () => {
   const [doctors, setDoctors] = useState([]);
   const [specialty, setSpecialty] = useState("");

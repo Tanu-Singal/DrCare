@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Calendar, Clock, Phone, MapPin, Video, CheckCircle2, XCircle } from "lucide-react";
-
+const API = import.meta.env.VITE_API;
 const DoctorDashboard = () => {
   const navigate = useNavigate();
   const contact = localStorage.getItem("doctorContact");

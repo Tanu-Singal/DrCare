@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { MapPin, Activity, PhoneCall, Compass } from "lucide-react";
-
+const API = import.meta.env.VITE_API;
 const HospitalLocator = () => {
   const [location, setLocation] = useState(null);
   const [places, setPlaces] = useState([]);

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { Mic, Send } from "lucide-react";
-
+const API = import.meta.env.VITE_API;
 const SymptomChat = ({ messages, setMessages }) => {
   const [input, setInput] = useState("");
   const [isListening, setIsListening] = useState(false);

@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import toast from "react-hot-toast";
 import ExportPDF from "./ExportPDF";
 import HealthSummary from "./HealthSummary";
-
+const API = import.meta.env.VITE_API;
 const SymptomHistory = ({ userPhone }) => {
   const [reports, setReports] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);

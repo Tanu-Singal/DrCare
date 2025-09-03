@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+const API = import.meta.env.VITE_API;
 const DoctorLogin = () => {
   const navigate = useNavigate();
 

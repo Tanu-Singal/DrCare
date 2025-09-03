@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+const API = import.meta.env.VITE_API;
 const Sidebar = ({ startNewChat }) => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);

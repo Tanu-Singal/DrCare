@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
+const API = import.meta.env.VITE_API;
 const ProfileSection = () => {
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);

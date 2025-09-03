@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 
 import SymptomHistory from "./SymptomHistroy";
 import Floating from "./Floating";
-
+const API = import.meta.env.VITE_API;
 const UserProfile = () => {
   const userPhone = localStorage.getItem("phone");
   const [appointments, setAppointments] = useState([]);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Tesseract from "tesseract.js";
 import toast from "react-hot-toast";
+const API = import.meta.env.VITE_API;
 const MedicalReport = () => {
   const [image, setImage] = useState(null);
   const [extractedText, setExtractedText] = useState("");

@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Mic, Send, Calendar, Clock } from "lucide-react";
-
+const API = import.meta.env.VITE_API;
 const Chat = ({ messages, setMessages }) => {
   const [input, setInput] = useState("");
   const [isListening, setIsListening] = useState(false);
