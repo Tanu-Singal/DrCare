@@ -11,7 +11,7 @@ const SymptomHistory = ({ userPhone }) => {
 
   useEffect(() => {
     const fetchReport = async () => {
-      const res = await fetch("https://mediconnect-backend1-r5kg.onrender.com/get-reports", {
+      const res = await fetch(`${API}/get-reports`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone: userPhone })
@@ -29,7 +29,7 @@ const SymptomHistory = ({ userPhone }) => {
   };
 
   const deleteReport = async (id) => {
-    const re = await fetch(`https://mediconnect-backend1-r5kg.onrender.com/delete-report/${id}`, { method: "DELETE" });
+    const re = await fetch(`${API}/delete-report/${id}`, { method: "DELETE" });
     if (re.ok) {
       toast.success("Report deleted successfully");
       setReports(reports.filter((rep) => rep._id !== id));

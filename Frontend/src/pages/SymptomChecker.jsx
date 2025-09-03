@@ -35,7 +35,7 @@ const SymptomChecker = () => {
     console.log("Sending follow-up count:", followUpCount);
 
     try {
-      const res = await fetch("https://mediconnect-backend1-r5kg.onrender.com/follow-up", {
+      const res = await fetch(`${API}/follow-up`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -95,7 +95,7 @@ const SymptomChecker = () => {
         };
 
         try {
-          const reportRes = await fetch("https://mediconnect-backend1-r5kg.onrender.com/save-report", {
+          const reportRes = await fetch(`${API}/save-report`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(reportPayload),
@@ -130,7 +130,7 @@ const SymptomChecker = () => {
     data.append("query", query);
 
     try {
-      const res = await fetch("https://mediconnect-backend1-r5kg.onrender.com/symptom-check", {
+      const res = await fetch(`${API}/symptom-check`, {
         method: "POST",
         body: data,
       });
@@ -175,7 +175,7 @@ const SymptomChecker = () => {
         };
 
         try {
-          const reportRes = await fetch("https://mediconnect-backend1-r5kg.onrender.com/save-report", {
+          const reportRes = await fetch(`${API}/save-report`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(reportPayload),
@@ -203,7 +203,7 @@ const SymptomChecker = () => {
 
   const getDoctors = async (specialization) => {
     try {
-      const res = await fetch("https://mediconnect-backend1-r5kg.onrender.com/find-doctors", {
+      const res = await fetch(`${API}/find-doctors`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ specialization }),
@@ -240,7 +240,7 @@ const SymptomChecker = () => {
     };
 
     try {
-      const res = await fetch("https://mediconnect-backend1-r5kg.onrender.com/book-appointment", {
+      const res = await fetch(`${API}/book-appointment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

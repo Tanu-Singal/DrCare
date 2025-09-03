@@ -25,7 +25,7 @@ const SymptomChat = ({ messages, setMessages }) => {
 
     try {
       const res = await fetch(
-        "https://mediconnect-backend1-r5kg.onrender.com/chat-agent",
+        `${API}/chat-agent`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

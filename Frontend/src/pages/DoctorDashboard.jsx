@@ -21,7 +21,7 @@ const DoctorDashboard = () => {
     const fetchAppointments = async () => {
       try {
         const res = await fetch(
-          `https://mediconnect-backend1-r5kg.onrender.com/get-doctor-appointment?contact=${contact}`
+          `${API}/get-doctor-appointment?contact=${contact}`
         );
         const data = await res.json();
         setAppointments(data.appointments || []);
@@ -35,7 +35,7 @@ const DoctorDashboard = () => {
   const cancelAppointment = async (id) => {
     try {
       const res = await fetch(
-        `https://mediconnect-backend1-r5kg.onrender.com/cancel-appointment/${id}`,
+        `${API}/cancel-appointment/${id}`,
         { method: "DELETE" }
       );
       if (res.ok) {
@@ -55,7 +55,7 @@ const DoctorDashboard = () => {
   const handleStatusUpdate = async (id, status) => {
     try {
       let res = await fetch(
-        `https://mediconnect-backend1-r5kg.onrender.com/update-appointment-status/${id}`,
+        `${API}/update-appointment-status/${id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -92,7 +92,7 @@ const DoctorDashboard = () => {
 
     try {
       const re = await fetch(
-        `https://mediconnect-backend1-r5kg.onrender.com/reschedule-appointment/${id}`,
+        `${API}/reschedule-appointment/${id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

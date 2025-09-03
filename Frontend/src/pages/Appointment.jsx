@@ -16,7 +16,7 @@ const Appointment = () => {
   });
 
   useEffect(() => {
-    fetch("https://mediconnect-backend1-r5kg.onrender.com/all_doctors")
+    fetch(`${API}/all_doctors`)
       .then((res) => res.json())
       .then((data) => setDoctors(data.doctors || data))
       .catch((err) => console.error("Error:", err));
@@ -67,7 +67,7 @@ const Appointment = () => {
 
     try {
       const res = await fetch(
-        "https://mediconnect-backend1-r5kg.onrender.com/book-appointment",
+        `${API}/book-appointment`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

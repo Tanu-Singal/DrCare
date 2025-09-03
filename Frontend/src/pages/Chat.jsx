@@ -38,7 +38,7 @@ const Chat = ({ messages, setMessages }) => {
       const timeStr = `${hours}:${minutes}`;
 
       const res = await fetch(
-        "https://mediconnect-backend1-r5kg.onrender.com/book-appoint",
+        `${API}/book-appoint`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

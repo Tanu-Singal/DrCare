@@ -16,7 +16,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const res = await fetch(`https://mediconnect-backend1-r5kg.onrender.com/get-user-appointments?phone=${userPhone}`);
+        const res = await fetch(`${API}/get-user-appointments?phone=${userPhone}`);
         const data = await res.json();
         if (data.appointments) setAppointments(data.appointments);
       } catch {
@@ -28,7 +28,7 @@ const UserProfile = () => {
 
   const cancelAppointment = async (id) => {
     try {
-      const res = await fetch(`https://mediconnect-backend1-r5kg.onrender.com/cancel-appointment/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API}/cancel-appointment/${id}`, { method: "DELETE" });
       if (res.ok) {
         toast.success("Appointment cancelled.");
         setAppointments(appointments.filter((appt) => appt._id !== id));

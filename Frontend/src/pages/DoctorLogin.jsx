@@ -55,7 +55,7 @@ const DoctorLogin = () => {
     const fetchDoc = async () => {
       try {
         const res = await fetch(
-          `https://mediconnect-backend1-r5kg.onrender.com/get-doctor-profile?contact=${contact}`
+          `${API}/get-doctor-profile?contact=${contact}`
         );
         const data = await res.json();
         if (data.success) setDoctor(data.doctor);
@@ -81,7 +81,7 @@ const DoctorLogin = () => {
 
     try {
       const res = await fetch(
-        "https://mediconnect-backend1-r5kg.onrender.com/doctor-login",
+        `${API}/doctor-login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

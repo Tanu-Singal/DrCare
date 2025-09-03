@@ -52,7 +52,7 @@ const ProfileSection = () => {
     payload.append("gender", profile.gender);
     payload.append("address", profile.address);
 
-    fetch("https://mediconnect-backend1-r5kg.onrender.com/ask", {
+    fetch(`${API}/ask`, {
       method: "POST",
       body: payload,
     })

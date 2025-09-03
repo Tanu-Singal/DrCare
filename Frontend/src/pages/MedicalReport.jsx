@@ -40,7 +40,7 @@ const MedicalReport = () => {
       formData.append("phone", phone);
 
       const res = await fetch(
-        "https://mediconnect-backend1-r5kg.onrender.com/rag-summary",
+        `${API}/rag-summary`,
         {
           method: "POST",
           body: formData,

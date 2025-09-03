@@ -23,7 +23,7 @@ const HospitalLocator = () => {
 
         try {
           const res = await fetch(
-            "https://mediconnect-backend1-r5kg.onrender.com/nearby-places",
+            `${API}/nearby-places`,
             {
               method: "POST",
               headers: {
