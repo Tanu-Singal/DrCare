@@ -16,4 +16,4 @@ venv/
 *.pyo
 *.pyd
 node_modules/
-App/node_modules/  
+App/node_modules/    
