@@ -41,14 +41,22 @@ const UserProfile = () => {
   };
 
   const formatStatus = (date) => {
-    if (!date) return "Invalid";
-    const [day, month, year] = date.split('/');
-    const apptDate = new Date(`${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`);
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    apptDate.setHours(0,0,0,0);
-    return apptDate < today ? "Completed" : "Upcoming";
-  };
+  if (!date || typeof date !== "string") return "Invalid";
+  const parts = date.split('/');
+  if (parts.length !== 3) return "Invalid";
+
+  let [day, month, year] = parts;
+  day = day?.padStart(2, '0') || '01';
+  month = month?.padStart(2, '0') || '01';
+  year = year || '1970';
+
+  const apptDate = new Date(`${year}-${month}-${day}`);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  apptDate.setHours(0, 0, 0, 0);
+
+  return apptDate < today ? "Completed" : "Upcoming";
+};
 
   return (
     <div className="p-6  text-gray-200 space-y-6">
