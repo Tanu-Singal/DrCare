@@ -103,7 +103,7 @@ const Chat = ({ messages, setMessages }) => {
     <div className="h-screen flex flex-col bg-gradient-to-br from-white to-sky-50">
       {/* Top bar */}
       <div className="p-4 bg-[#1e293b] text-white shadow-md flex flex-wrap justify-between items-center">
-        <h1 className="text-lg font-semibold">💬 Book Appointment</h1>
+        <h1 className="text-lg font-semibold"> Book Appointment</h1>
         <select
           value={lang}
           onChange={(e) => setLang(e.target.value)}
@@ -176,14 +176,14 @@ const Chat = ({ messages, setMessages }) => {
         />
         <button
           onClick={handleSend}
-          className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-md"
+          className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-md"
         >
           <Send className="w-5 h-5" />
         </button>
         <button
           onClick={startVoiceInput}
           title="Tap to speak"
-          className={`p-3 rounded-full text-white shadow-md ${
+          className={`cursor-pointer p-3 rounded-full text-white shadow-md ${
             isListening ? "bg-red-500" : "bg-gray-700"
           }`}
         >
