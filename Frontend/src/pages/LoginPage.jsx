@@ -59,10 +59,13 @@ const LoginPage = () => {
           uid: userCred.user.uid,
         });
         toast.success("Signup successful!");
+          localStorage.setItem("user_name", name);
+          localStorage.setItem("phone", phone);
           localStorage.setItem("role", role);
         localStorage.setItem("uid", userCred.user.uid);
 
         if (role === "doctor") {
+            localStorage.setItem("user_name", name);
           localStorage.setItem("role", "doctor");
           localStorage.setItem("doctorContact", phone);
           navigate("/doctorLogin");
@@ -263,7 +266,7 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full bg-[#f43f5e] text-white font-bold py-2 rounded-lg hover:bg-[#be123c] transition transform hover:scale-105 active:scale-95 shadow-md flex justify-center items-center gap-2 ${
+              className={`cursor-pointer w-full bg-[#f43f5e] text-white font-bold py-2 rounded-lg hover:bg-[#be123c] transition transform hover:scale-105 active:scale-95 shadow-md flex justify-center items-center gap-2 ${
                 loading ? "opacity-70 cursor-not-allowed" : ""
               }`}
             >
@@ -297,7 +300,7 @@ const LoginPage = () => {
             {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="text-[#f43f5e] font-semibold hover:underline  transition duration-100 ease-in-out"
+              className="cursor-pointer text-[#f43f5e] font-semibold hover:underline  transition duration-100 ease-in-out"
             >
               {isLogin ? "Signup" : "Login"}
             </button>
