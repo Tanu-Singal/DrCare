@@ -25,8 +25,43 @@ load_dotenv()
 
 
 app=FastAPI()
-api_key= os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=api_key)
+
+API_KEYS = [
+   os.getenv("GEMINI_API_KEY1"),
+    os.getenv("GEMINI_API_KEY2"),
+    os.getenv("GEMINI_API_KEY3"),
+    os.getenv("GEMINI_API_KEY4"),
+    os.getenv("GEMINI_API_KEY5"),
+]
+current_index = 0
+
+def configure_genai():
+    """Set the current API key for genai."""
+    global current_index
+    genai.configure(api_key=API_KEYS[current_index])
+
+def safe_gpt(prompt: str, role_prompt: str = "") -> str:
+    global current_index
+    if not prompt.strip():
+        return "⚠️ Empty prompt given."
+    
+    full_prompt = f"{role_prompt}\nQ: {prompt}"
+    attempts = 0
+
+    while attempts < len(API_KEYS):
+        try:
+            configure_genai()
+            model = genai.GenerativeModel("models/gemini-1.5-flash")
+            response = model.generate_content([full_prompt])
+            return response.text.strip()
+        except Exception as e:
+            if "quota exceeded" in str(e).lower() or "limit" in str(e).lower():
+                current_index = (current_index + 1) % len(API_KEYS)
+                attempts += 1
+            else:
+                return f"⚠️ GPT error: {str(e)}"
+    
+    return "⚠️ All API keys have reached their limits."
 
 
 # MongoDB setup
@@ -46,7 +81,7 @@ init_collect(doc_col=db["doctors"],appoint_col=db["appointments"])
  
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://dr-care-brown.vercel.app"],
+    allow_origins=["https://dr-care-brown.vercel.app","http://localhost:5173","http://127.0.0.1:8000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -145,24 +180,46 @@ async def reschedule_appointment(id:str,payload:RescheduleUpdate):
 
 
 @app.post("/chat-agent")
-async def chat_agent(request:Request):
-    data=await request.json()
-    print("data",data)
-    user_query=data.get("query")
-    phone=data.get("phone")
+async def chat_agent(request: Request):
+    data = await request.json()
+    user_query = data.get("query")
+    phone = data.get("phone")
     full_prompt = f"{user_query}\nPhone: {phone}"
+
     try:
+        # Get bot response
         response = health_agent.invoke(full_prompt)
         if isinstance(response, dict):
             response = response.get("output", str(response))
-        chat_histroy.insert_one({
-            "phone": phone,
-            "query": user_query,
-            "answer": response,
-            "source": "chat-agent",
-            "created_at": datetime.now().isoformat()
-        })
-        return { "text": response }
+
+        # Find existing session for this phone
+        existing_chat = chat_histroy.find_one({"phone": phone}, sort=[("created_at", -1)])
+
+        if existing_chat:
+            # Append new messages
+            chat_histroy.update_one(
+                {"_id": existing_chat["_id"]},
+                {"$push": {
+                    "messages": {
+                        "$each": [
+                            {"sender": "user", "text": user_query, "timestamp": datetime.now().isoformat()},
+                            {"sender": "bot", "text": response, "timestamp": datetime.now().isoformat()}
+                        ]
+                    }
+                }}
+            )
+        else:
+            # Create new session
+            chat_histroy.insert_one({
+                "phone": phone,
+                "messages": [
+                    {"sender": "user", "text": user_query, "timestamp": datetime.now().isoformat()},
+                    {"sender": "bot", "text": response, "timestamp": datetime.now().isoformat()}
+                ],
+                "created_at": datetime.now().isoformat()
+            })
+
+        return {"text": response}
 
     except Exception as e:
         return {"error": str(e)}
@@ -189,7 +246,7 @@ Keep response under 5 lines. Use emojis.
 If report is unclear, say: "⚠️ Could not understand this report."
 """
     
-    summary=ask_gpt(question=ocr_text,role_prompt=role_prompt)
+    summary=safe_gpt(question=ocr_text,role_prompt=role_prompt)
     med_collection.insert_one({
         "phone": phone,
         "summary": summary,
@@ -229,7 +286,7 @@ Use empathetic and simple language.
 Avoid giving false hope. No prescriptions.
 Just tell the issue, cause (if known), and what to do.
 """
-    return ask_gpt(prompt,role_prompt="You are a doctor.Summarize the following health chat in 3-4 short lines.")
+    return safe_gpt(prompt,role_prompt="You are a doctor.Summarize the following health chat in 3-4 short lines.")
 
 
 @app.post("/save-report")
@@ -253,7 +310,7 @@ async def get_reports(request: PhoneRequest):
         report["_id"]=str(report["_id"])
     return {"reports":reports}
 
-@app.delete("delete-report/{rep_id}")
+@app.delete("/delete-report/{rep_id}")
 async def delete_report(rep_id:str):
     re=report_collection.delete_one({"_id":ObjectId(rep_id)})
     if re.deleted_count == 1:
@@ -392,7 +449,7 @@ def translate(text:str,dest:str="en")->str:
     return model.generate_content(prompt).text.strip()
 
 
-def ask_gpt(question: str, role_prompt: str ="you are a rural health advisor give advice to health related in friendly way.") -> str:
+def safe_gpt(question: str, role_prompt: str ="you are a rural health advisor give advice to health related in friendly way.") -> str:
     model = genai.GenerativeModel('models/gemini-1.5-flash')
     prompt = f"{role_prompt}\nQ: {question}"
     response = model.generate_content([prompt])
@@ -411,18 +468,31 @@ async def nearby_places(data:LocationInput):
     }
 
 @app.get("/history")
-async def get_chat_history(phone:str):
+async def get_chat_history(phone: str):
     print(f"📞 Fetching history for phone: {phone}")
     chats = list(chat_histroy.find({"phone": phone}).sort("created_at", -1))
+
     history = [
         {
-            "question": chat["query"],
-            "answer": chat["answer"],
+            "id": str(chat["_id"]),       # for delete
+            "messages": chat.get("messages", []),
             "created_at": chat["created_at"]
         }
         for chat in chats
     ]
     return JSONResponse(content={"history": history})
+
+@app.delete("/history/{chat_id}")
+async def delete_chat(chat_id: str):
+    try:
+        result = chat_histroy.delete_one({"_id": ObjectId(chat_id)})
+        if result.deleted_count == 1:
+            return {"success": True}
+        else:
+            return {"success": False, "message": "Chat not found"}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
+
 
 
 
