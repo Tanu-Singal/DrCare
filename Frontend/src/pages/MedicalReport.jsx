@@ -149,4 +149,4 @@ const MedicalReport = () => {
   );
 };
 
-export default MedicalReport;
+export default MedicalReport; 
