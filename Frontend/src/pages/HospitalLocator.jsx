@@ -1,18 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect  } from "react";
 import toast from "react-hot-toast";
 import { MapPin, Activity, PhoneCall, Compass } from "lucide-react";
 const API = import.meta.env.VITE_API;
+
+
 const HospitalLocator = () => {
   const [location, setLocation] = useState(null);
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
 
+   const mapRef = useRef(null);
+
+         useEffect(() => {
+    if (selectedPlace && mapRef.current) {
+      mapRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [selectedPlace]);
+
   const fetchLocationAndPlaces = () => {
     if (!navigator.geolocation) {
       toast.error("Geolocation is not supported by your browser.");
       return;
     }
+
 
     setLoading(true);
     navigator.geolocation.getCurrentPosition(
@@ -23,7 +34,7 @@ const HospitalLocator = () => {
 
         try {
           const res = await fetch(
-            `${API}/nearby-places`,
+             `${API}/nearby-places`,
             {
               method: "POST",
               headers: {
@@ -70,7 +81,7 @@ const HospitalLocator = () => {
           <button
             onClick={fetchLocationAndPlaces}
             disabled={loading}
-            className={`px-6 py-2 rounded-lg font-semibold shadow-md transition transform hover:scale-[1.02] active:scale-95 ${
+            className={`cursor-pointer px-6 py-2 rounded-lg font-semibold shadow-md transition transform hover:scale-[1.02] active:scale-95 ${
               loading
                 ? "bg-gray-600 cursor-not-allowed"
                 : "bg-[#f43f5e] hover:bg-[#be123c] text-white"
@@ -131,7 +142,7 @@ const HospitalLocator = () => {
                         <div className="flex gap-4 mt-2 text-sm">
                           <button
                             onClick={() => setSelectedPlace(coords)}
-                            className="flex items-center gap-1 text-blue-400 hover:text-blue-300"
+                            className="cursor-pointer flex items-center gap-1 text-blue-400 hover:text-blue-300"
                           >
                             <Compass className="w-4 h-4" /> View on Map
                           </button>
@@ -161,7 +172,7 @@ const HospitalLocator = () => {
         </div>
 
         {/* Right Side: Map */}
-        <div className="md:w-1/2">
+        <div  ref={mapRef}  className="md:w-1/2">
           <div className="bg-[#0f172a] border border-gray-700 rounded-2xl shadow-md h-[500px] flex items-center justify-center overflow-hidden">
             {selectedPlace ? (
               <iframe
