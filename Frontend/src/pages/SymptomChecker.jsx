@@ -86,7 +86,7 @@ const SymptomChecker = () => {
       if (data.final && /doctor|remedy|specialist/i.test(followUpReply)) {
         setFinalSuggestion(data);
         const userInputMsgs = updatedHistory.filter((msg) => msg.role === "user");
-        const symptoms = userInputMsgs.at(-1)?.message || "N/A";
+        const symptoms = userInputMsgs.at(0)?.message || "N/A";
 
         const reportPayload = {
           user_id: localStorage.getItem("user_id") || "guest",
